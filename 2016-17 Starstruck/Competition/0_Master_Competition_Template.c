@@ -1,12 +1,10 @@
-#pragma config(Sensor, in1,    LiftPot,        sensorPotentiometer)
-#pragma config(Sensor, in2,    RLine,          sensorLineFollower)
-#pragma config(Sensor, in3,    LLine,          sensorLineFollower)
-#pragma config(Sensor, in4,    Gyro,           sensorAnalog)
-#pragma config(Sensor, dgtl1,  LaunchDownR,    sensorTouch)
-#pragma config(Sensor, dgtl2,  LaunchDownL,    sensorTouch)
-#pragma config(Sensor, dgtl3,  RopeTaut,       sensorTouch)
+#pragma config(Sensor, in1,    TensionerPot,   sensorPotentiometer)
+#pragma config(Sensor, in2,    LauncherPot,    sensorPotentiometer)
+#pragma config(Sensor, in3,    RLine,          sensorLineFollower)
+#pragma config(Sensor, in4,    LLine,          sensorLineFollower)
+#pragma config(Sensor, in5,    Gyro,           sensorGyro)
 #pragma config(Sensor, dgtl10, DirectionLED,   sensorLEDtoVCC)
-#pragma config(Sensor, dgtl11, Transmission,   sensorDigitalOut)
+#pragma config(Sensor, dgtl11, Claw,           sensorDigitalOut)
 #pragma config(Sensor, dgtl12, Lock,           sensorDigitalOut)
 #pragma config(Motor,  port2,           RFBase,        tmotorVex393_MC29, openLoop, driveRight)
 #pragma config(Motor,  port3,           LFBase,        tmotorVex393_MC29, openLoop, reversed, driveLeft)
@@ -50,10 +48,10 @@ bool debugModeEnabled = false;
 //Dumpapult - manual adjust
 #define LaunchUpBtn (debugModeEnabled ? vexRT[Btn6U] : 0)
 #define LaunchDownBtn (debugModeEnabled ? vexRT[Btn6D] : 0)
-#define LaunchRightBtn (debugModeEnabled ? vexRT[Btn8R] : 0)
-#define LaunchLeftBtn (debugModeEnabled ? vexRT[Btn8L] : 0)
 #define LaunchUnlockBtn (debugModeEnabled ? vexRT[Btn8U] : 0)
 #define LaunchLockBtn (debugModeEnabled ? vexRT[Btn8D] : 0)
+#define ClawOpenBtn (debugModeEnabled ? vexRT[Btn8R] : 0)
+#define ClawCloseBtn (debugModeEnabled ? vexRT[Btn8L] : 0)
 
 //Dumpapult - auto function
 #define LaunchModifierBtn (!debugModeEnabled ? vexRT[Btn6U] : 0)
@@ -69,6 +67,9 @@ bool transmissionActive = false;
 #define LiftTransmissionBtn ((vexRT[Btn5U] == 1 && vexRT[Btn5D] == 1 && debugModeEnabled) ? 1 : 0)
 #define LiftUpBtn ((vexRT[Btn5U] == 1 && vexRT[Btn5D] == 0 && transmissionActive && debugModeEnabled) ? 1 : 0)
 #define LiftDownBtn ((vexRT[Btn5D] == 1 && vexRT[Btn5U] == 0 && transmissionActive && debugModeEnabled) ? 1 : 0)
+
+#define JohnCenaBtn vexRT[Btn5U]
+#define NameBtn vexRT[Btn5D]
 
 //These global variables are used to manage toggle and emergency stop functions
 int robotDirection = 1;
@@ -92,6 +93,8 @@ void resetGyro()
 //Predefined construct
 void pre_auton()
 {
+	bool bol = true;
+	playSoundFile(bol ? "xp.wav" : "0");
 	SmartMotorsInit();
 	SmartMotorLinkMotors(LaunchL1, LaunchL23);
 	SmartMotorLinkMotors(LaunchR1, LaunchR2);
@@ -99,40 +102,24 @@ void pre_auton()
 	SmartMotorRun();
 	bStopTasksBetweenModes = false;
 	resetGyro();
+	SensorValue[Lock] = 1;
 }
 
-//Task controlling behavior during Autonomous period
 task usercontrol()
 {
 	startTask(Gearbox);
 	startTask(Drive);
 	startTask(EmergencyOverride);
 	startTask(Debug);
+	startTask(JohnCena);
+	startTask(LCD);
 	while(true) //Keep this task going so that the Vex Competition system does not mistake the robot for disconnected
 	{
 		EndTimeSlice();
-	}//*/
+	}
 }
 
-//Task controlling behavior during Driver Control period
 task autonomous()
 {
-	ABase(0, 127, 0, 500);
-	ABase(0, -127, 0, 500);
-	LaunchM(127);
-	ABase(0, 127, 0, 750);
-	wait1Msec(1500);
-	LaunchM(30);
-	wait1Msec(500);
-	ABase(-65, 0, 0, 1750);
-	ABase(65, 0, 0, 500);
-	for(int i = 0; i < 4; i++)
-	{
-		ABase(0, 65, 0, 600);
-		wait1Msec(1500);
-		ABase(0, -65, 0, 600);
-		wait1Msec(500);
-		ABase(65, 0, 0, 500);
-		wait1Msec(500);
-	}
+
 }

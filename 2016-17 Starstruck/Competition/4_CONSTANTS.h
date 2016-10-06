@@ -2,14 +2,14 @@
 //EDIT WITH CAUTION!
 
 //Base Constants:
-const int SLOW_COEFFICIENT = 0.75; //How fast to turn the robot while on slow mode
+const int SLOW_COEFFICIENT = 0.25; //How fast to turn the robot while on slow mode
 
 //Launcher Constants:
 const int PULLBACK_CONSTANTS[] = {
-	1250, //1 star, 3.5 feet
-	1500, //2 stars, 3.5 feet
-	2000, //3 stars, 3.5 feet
-	1500  //1 cube, 5 feet
+	1000, //1 star, 3.5 feet
+	1250, //2 stars, 3.5 feet
+	1500, //3 stars, 3.5 feet
+	1750  //1 cube, 5 feet
 };
 
 const int HOLD_CONSTANTS[] = {
@@ -20,6 +20,8 @@ const int HOLD_CONSTANTS[] = {
 };
 
 //Lift Constants:
-const int MAX_LIFT = 3500;
-const int MIN_LIFT = 400;
-const int LIFT_DOWN_HOLD = 50;
+const int TENSIONER_LOW_LIMIT = 3900;
+const int TENSIONER_HIGH_LIMIT = 1500;
+const int LAUNCHER_GROUND = 2750;
+const int LAUNCHER_CLAW_RELEASE = 1820;
+const int LAUNCHER_MAX = 1175;

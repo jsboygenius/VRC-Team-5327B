@@ -27,44 +27,86 @@ void BaseControl(int X_comp, int Y_comp, int rot_comp, int slow = 0)
 
 void LaunchM(int speed)
 {
-	if(SensorValue[TensionerPot] < TENSIONER_LOW_LIMIT && SensorValue[TensionerPot] > TENSIONER_HIGH_LIMIT)
+	//if(SensorValue[TensionerPot] < TENSIONER_LOW_LIMIT && SensorValue[TensionerPot] > TENSIONER_HIGH_LIMIT)
+	//{
+	SetMotor(LaunchR1, speed);
+	SetMotor(LaunchR2, speed);
+	SetMotor(LaunchR3, speed);
+	SetMotor(LaunchL1, speed);
+	SetMotor(LaunchL23, speed);
+	/*}
+	else
 	{
-		SetMotor(LaunchR1, speed);
-		SetMotor(LaunchR2, speed);
-		SetMotor(LaunchR3, speed);
-		SetMotor(LaunchL1, speed);
-		SetMotor(LaunchL23, speed);
+	while(SensorValue[TensionerPot] < TENSIONER_HIGH_LIMIT)
+	{
+	SetMotor(LaunchR1, 25);
+	SetMotor(LaunchR2, speed);
+	SetMotor(LaunchR3, 25);
+	SetMotor(LaunchL1, 25);
+	SetMotor(LaunchL23, 25);
+	}
+	while(SensorValue[TensionerPot] > TENSIONER_LOW_LIMIT)
+	{
+	SetMotor(LaunchR1, -25);
+	SetMotor(LaunchR2, speed);
+	SetMotor(LaunchR3, -25);
+	SetMotor(LaunchL1, -25);
+	SetMotor(LaunchL23, -25);
+	}
+	SetMotor(LaunchR1, 0);
+	SetMotor(LaunchR2, speed);
+	SetMotor(LaunchR3, 0);
+	SetMotor(LaunchL1, 0);
+	SetMotor(LaunchL23, 0);
+	}*/
+}
+
+int lastLockToggle = 0;
+int lastNotifyToggle = 0;
+
+void notifyLock()
+{
+	if(SensorValue[Lock] == 1)
+	{
+		playImmediateTone(500, 20);
 	}
 	else
 	{
-		while(SensorValue[TensionerPot] < TENSIONER_HIGH_LIMIT)
-		{
-			SetMotor(LaunchR1, 25);
-			SetMotor(LaunchR2, speed);
-			SetMotor(LaunchR3, 25);
-			SetMotor(LaunchL1, 25);
-			SetMotor(LaunchL23, 25);
-		}
-		while(SensorValue[TensionerPot] > TENSIONER_LOW_LIMIT)
-		{
-			SetMotor(LaunchR1, -25);
-			SetMotor(LaunchR2, speed);
-			SetMotor(LaunchR3, -25);
-			SetMotor(LaunchL1, -25);
-			SetMotor(LaunchL23, -25);
-		}
-		SetMotor(LaunchR1, 0);
-		SetMotor(LaunchR2, speed);
-		SetMotor(LaunchR3, 0);
-		SetMotor(LaunchL1, 0);
-		SetMotor(LaunchL23, 0);
+		playImmediateTone(750, 20);
 	}
 }
 
-void debug(int lockState, int launchAdjust)
+void autoDump()
 {
-	SensorValue[Lock] = (lockState == 1) ? 1 : (lockState == -1) ? 0 : SensorValue[lock];
+	SensorValue[Lock] = 0;
+
+}
+
+void debug(int lockState, int launchAdjust, int lockToggle, int notifyLockBtn, int autoDumpBtn = 0)
+{
+	bLCDBacklight = (SensorValue[Lock] == 1)
+	if(lockToggle != lastLockToggle)
+	{
+		SensorValue[Lock] = abs(SensorValue[Lock] - lockToggle);
+		lastLockToggle = lockToggle;
+		if(lastLockToggle == 1)
+		{
+			notifyLock();
+		}
+	}
+	if(notifyLockBtn != lastNotifyToggle)
+	{
+		if(notifyLockBtn == 1)
+		{
+			notifyLock();
+		}
+		lastNotifyToggle = notifyLockBtn;
+	}
 	LaunchM(127 * launchAdjust);
+	if(autoDumpBtn == 1)
+	{
+		autoDump();
+	}
 }
 
 int* determinePullback(int* inputValues, int len)
@@ -106,12 +148,8 @@ task Gearbox()
 		//First, determine whether we are in debug or not
 		if(debugModeEnabled)
 		{
-
-			debug(LaunchUnlockBtn - LaunchLockBtn, LaunchUpBtn - LaunchDownBtn);
-		}
-		else //Not in debug, so normal functionality
-		{
-
+			debug(LaunchUnlockBtn - LaunchLockBtn, LaunchUpBtn - LaunchDownBtn, LockToggleBtn, LaunchNotifyBtn);
+			wait1Msec(100);
 		}
 		EndTimeSlice();
 	}
@@ -138,9 +176,9 @@ task JohnCena()
 	{
 		/*if(LoopBtn == 1)
 		{
-			bool bol = true;
-			playSoundFile(bol ? "loopJC.wav" : "0");
-			waitUntil(JohnCenaBtn == 0);
+		bool bol = true;
+		playSoundFile(bol ? "loopJC.wav" : "0");
+		waitUntil(JohnCenaBtn == 0);
 		}
 		else*/ if(JohnCenaBtn == 1)
 		{

@@ -20,8 +20,8 @@ const int HOLD_CONSTANTS[] = {
 };
 
 //Lift Constants:
-const int TENSIONER_LOW_LIMIT = 3900;
-const int TENSIONER_HIGH_LIMIT = 1500;
+const int TENSIONER_LOW_LIMIT = 2050;
+const int TENSIONER_HIGH_LIMIT = 350;
 const int LAUNCHER_GROUND = 2750;
 const int LAUNCHER_CLAW_RELEASE = 1820;
 const int LAUNCHER_MAX = 1175;

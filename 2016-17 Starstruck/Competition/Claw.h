@@ -1,8 +1,8 @@
 //This header file contains all code for controlling the claw intake.
 
 //Define OPEN and CLOSED to make code more readable
-#define OPEN 1
-#define CLOSED 0
+#define OPEN 0
+#define CLOSED 1
 
 //Store previous toggle state to prevent accidental rapid switching
 int previousToggle = 0;

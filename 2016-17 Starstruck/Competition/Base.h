@@ -9,8 +9,8 @@ Has no outputs.
 */
 void driverBaseControl(int L_speed, int R_speed)
 {
-	slewm(LFBase, trueSpeed(L_speed));
-	slewm(RFBase, trueSpeed(L_speed));
+	motor[LFBase] = trueSpeed(L_speed);
+	motor[RFBase]= trueSpeed(R_speed);
 }
 
 /*
@@ -20,7 +20,7 @@ task base()
 {
 	while(true)
 	{
-		driverBaseControl(vexRT[L_Joy], vexRT[R_Joy]);
+		driverBaseControl(L_Joy, R_Joy);
 		EndTimeSlice();
 	}
 }

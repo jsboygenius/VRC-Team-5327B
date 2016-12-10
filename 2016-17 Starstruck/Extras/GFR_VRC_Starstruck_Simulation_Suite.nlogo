@@ -1,4 +1,8 @@
 breed [perimeters perimeter]
+breed [fences fence]
+breed [tape tape-sing]
+breed [cubes cube]
+breed [stars star]
 
 to setup
   ca
@@ -39,6 +43,106 @@ to create-field
   [
     set heading 90
     setxy 23.5 47.4
+  ]
+  create-fences 2
+  [
+    set heading 0
+    setxy 23.5 23.25
+    set size 47
+    set shape "fence"
+    set color white
+  ]
+  ask fence 4
+  [
+    repeat 50
+    [
+      set ycor ycor + 0.01
+      stamp
+    ]
+  ]
+  create-tape 4
+  [
+    set heading 0
+    setxy 23.5 23
+    set size 47
+    set shape "fence"
+    set color white
+  ]
+  ask tape-sing 7 
+  [
+    set ycor 24
+  ]
+  ask tape-sing 8
+  [
+    set ycor 11.5 
+  ]
+  ask tape-sing 9
+  [
+    set ycor 35.5
+  ]
+  create-cubes 2
+  [
+    set heading 45
+    set shape "square"
+    set color orange
+    set size 7.5
+    setxy 23.5 11.5
+  ]
+  ask cube 11
+  [
+    set ycor 35.5
+  ]
+  create-stars 2
+  [
+    set heading 90
+    set shape "starstruckstar"
+    set color yellow
+    set size 10
+    setxy 3.5 3.5
+  ]
+  ask star 13
+  [
+    set xcor 19.5
+    hatch 1
+    repeat 2
+    [
+      set xcor xcor + 4
+      hatch 1
+    ]
+    set xcor 43.5
+    hatch 1
+  ]
+  ask stars
+  [
+    hatch 1
+    set ycor 43.5
+  ]
+  create-stars 1
+  [
+    set heading 90
+    set shape "starstruckstar"
+    set color yellow
+    set size 10
+    setxy 2 23.5
+    hatch 1
+    repeat 2
+    [
+      set xcor xcor + 5
+      hatch 1
+    ]
+    set xcor 17.5
+    hatch 1
+    repeat 3
+    [
+      set xcor xcor + 4
+      hatch 1
+    ]
+    set xcor 45
+    repeat 2
+    [
+      hatch 1
+      set xcor xcor - 5
+    ]
   ]
 end
 @#$#@#$#@
@@ -231,6 +335,11 @@ Circle -16777216 true false 60 75 60
 Circle -16777216 true false 180 75 60
 Polygon -16777216 true false 150 168 90 184 62 210 47 232 67 244 90 220 109 205 150 198 192 205 210 220 227 242 251 229 236 206 212 183
 
+fence
+true
+0
+Line -7500403 true 0 150 300 150
+
 fish
 false
 0
@@ -337,7 +446,7 @@ Polygon -7500403 true false 276 85 285 105 302 99 294 83
 Polygon -7500403 true false 219 85 210 105 193 99 201 83
 
 square
-false
+true
 0
 Rectangle -7500403 true true 30 30 270 270
 
@@ -351,6 +460,12 @@ star
 false
 0
 Polygon -7500403 true true 151 1 185 108 298 108 207 175 242 282 151 216 59 282 94 175 3 108 116 108
+
+starstruckstar
+true
+0
+Polygon -1184463 true false 165 165 150 225 135 165 90 105 150 135 210 105 165 165
+Polygon -1184463 true false 135 135 150 75 165 135 210 195 150 165 90 195 135 135
 
 target
 false

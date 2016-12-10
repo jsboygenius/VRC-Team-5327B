@@ -30,7 +30,7 @@ Has no outputs.
 */
 void liftSpeed(int speed)
 {
-	slewm(LiftR1, speed); //Use slew rate control to prevent wearing down of internal gears
+	motor[LiftR1] = speed; //Use slew rate control to prevent wearing down of internal gears
 }
 
 /*
@@ -41,29 +41,17 @@ Has no outputs.
 */
 void driverLiftControl(int adjustDir)
 {
-	if(adjustDir == 1 && !liftTooHigh()) //Check if we wish to adjust up but haven't hit max limit
+	if(adjustDir == 1) //Check if we wish to adjust up
 	{
 		liftSpeed(127);
 	}
-	else if (adjustDir == -1 && !liftTooLow()) //Check if we wish to adjust down but haven't hit min limit
+	else if (adjustDir == -1) //Check if we wish to adjust down
 	{
 		liftSpeed(-127);
 	}
 	else //Otherwise, just hold the lift at the current height
 	{
 		liftSpeed(LIFT_HOLD_SPEED);
-	}
-	if(liftTooHigh() || liftTooLow()) //If we have exceeded the allowable bounds
-	{
-		while(liftTooHigh()) //Bring lift down slightly
-		{
-			liftSpeed(-60);
-		}
-		while(liftTooLow()) //Bring lift up slightly
-		{
-			liftSpeed(60);
-		}
-		liftSpeed(LIFT_HOLD_SPEED); //Reset to holding speed once we are in bounds
 	}
 }
 
